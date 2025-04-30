@@ -7,10 +7,10 @@ import YAML from "yamljs";
 import cors from "cors";
 import helmet from "helmet";
 import path from "path";
-
+import swaggerConfig from "./config/swagger.config";
 const app = express();
 
-const swaggerDocument = YAML.load(path.join(__dirname, "docs", "swagger.yaml"));
+// const swaggerDocument = YAML.load(path.join(__dirname, "docs", "swagger.yaml"));
 
 // console.log({ swaggerDocument });
 //Middlewares
@@ -22,7 +22,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 //swagger docs
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerConfig);
 
 app.get("/", (req, res) => {
   res.send("Hello world");

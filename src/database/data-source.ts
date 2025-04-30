@@ -12,7 +12,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DB_NAME,
   synchronize: process.env.APP_ENVIRONMENT === "production" ? false : true,
   logging: false,
-  entities: ["dist/**/*.entity.ts"],
+  entities: ["dist/**/*.entity.js"],
   timezone: "+00:00",
 };
 

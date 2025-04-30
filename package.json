@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "start:dev": "nodemon --config nodemon.json"
+    "build": "tsc",
+    "postbuild": "copyfiles -u 1 src/docs/swagger.yaml dist/docs",
+    "start:dev": "concurrently \"tsc --watch\" \"nodemon --config nodemon.json\"",
+    "start": "npm run build && npm run postbuild && node dist/app.js"
   },
   "dependencies": {
     "@types/body-parser": "^1.19.5",
@@ -11,6 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-basic-auth": "^1.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
@@ -39,6 +43,7 @@
     "@types/node": "^22.14.1",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/yamljs": "^0.2.34",
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
