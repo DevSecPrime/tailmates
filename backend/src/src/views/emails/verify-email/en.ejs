@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification | <%= process.env.APP_NAME %></title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        padding: 40px 20px;
+      }
+
+      .main {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #ff91b7 0%, #ff6b9d 100%);
+      }
+
+      .logo-container {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .logo {
+        width: 120px;
+        height: auto;
+      }
+
+      .brand-name {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-top: 12px;
+        letter-spacing: -0.5px;
+      }
+
+      h1 {
+        font-size: 26px;
+        color: #2d3748;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      p {
+        font-size: 15px;
+        color: #4a5568;
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+
+      .greeting {
+        font-size: 16px;
+        font-weight: 500;
+        color: #2d3748;
+      }
+
+      .otp-container {
+        background: linear-gradient(135deg, #ffe5f0 0%, #ffd4e8 100%);
+        border-radius: 12px;
+        padding: 32px 20px;
+        margin: 32px 0;
+        text-align: center;
+        border: 2px dashed #ff91b7;
+      }
+
+      .otp-label {
+        font-size: 13px;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .otp {
+        background-color: #ff91b7;
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 16px;
+        border-radius: 10px;
+        padding: 18px 20px;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(255, 145, 183, 0.3);
+        user-select: all;
+      }
+
+      .info-box {
+        background-color: #f7fafc;
+        border-left: 4px solid #ff91b7;
+        padding: 16px 20px;
+        margin: 24px 0;
+        border-radius: 6px;
+      }
+
+      .info-box p {
+        margin-bottom: 0;
+        font-size: 14px;
+        color: #4a5568;
+      }
+
+      .warning {
+        background-color: #fff5f5;
+        border-left-color: #fc8181;
+        margin-top: 24px;
+      }
+
+      .warning p {
+        color: #c53030;
+        font-size: 13px;
+      }
+
+      .signature {
+        margin-top: 36px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .signature p {
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      .team-name {
+        color: #2d3748;
+        font-weight: 600;
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #a0aec0;
+        text-align: center;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+        line-height: 1.6;
+      }
+
+      .footer a {
+        color: #ff91b7;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Tablet devices */
+      @media only screen and (max-width: 768px) {
+        .wrapper {
+          padding: 30px 16px;
+        }
+
+        .main {
+          padding: 36px 28px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .brand-name {
+          font-size: 26px;
+        }
+
+        .otp {
+          font-size: 28px;
+          letter-spacing: 12px;
+        }
+      }
+
+      /* Mobile devices */
+      @media only screen and (max-width: 480px) {
+        .wrapper {
+          padding: 20px 12px;
+        }
+
+        .main {
+          padding: 28px 20px;
+          border-radius: 12px;
+        }
+
+        .logo {
+          width: 100px;
+        }
+
+        .brand-name {
+          font-size: 24px;
+        }
+
+        h1 {
+          font-size: 22px;
+          margin-bottom: 16px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        .otp-container {
+          padding: 24px 16px;
+          margin: 24px 0;
+        }
+
+        .otp {
+          font-size: 24px;
+          letter-spacing: 10px;
+          padding: 16px 16px;
+        }
+
+        .info-box {
+          padding: 14px 16px;
+        }
+
+        .signature {
+          margin-top: 28px;
+          padding-top: 20px;
+        }
+
+        .footer {
+          font-size: 11px;
+          margin-top: 24px;
+          padding-top: 20px;
+        }
+      }
+
+      /* Small mobile devices */
+      @media only screen and (max-width: 360px) {
+        .main {
+          padding: 24px 16px;
+        }
+
+        .otp {
+          font-size: 20px;
+          letter-spacing: 8px;
+          padding: 14px 12px;
+        }
+
+        h1 {
+          font-size: 20px;
+        }
+
+        .brand-name {
+          font-size: 22px;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+
+        .main {
+          background-color: #2d3748;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        h1,
+        .brand-name,
+        .team-name {
+          color: #f7fafc;
+        }
+
+        p,
+        .greeting {
+          color: #cbd5e0;
+        }
+
+        .info-box {
+          background-color: #374151;
+        }
+
+        .info-box p {
+          color: #cbd5e0;
+        }
+
+        .footer {
+          color: #718096;
+          border-top-color: #4a5568;
+        }
+
+        .signature {
+          border-top-color: #4a5568;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="main">
+        <div class="logo-container">
+          <img
+            src="<%= process.env.APP_URL %>/images/logo.png"
+            alt="Studio Era Logo"
+            class="logo"
+          />
+          <div class="brand-name">Studio Era</div>
+        </div>
+
+        <h1>🔐 OTP Verification</h1>
+
+        <p class="greeting">Welcome to <strong>Studio Era</strong>! 🎉</p>
+
+        <p>
+          We're thrilled to have you join our creative community. To ensure the security of your
+          account and provide you with the best personalized experience, we need to verify your
+          email address.
+        </p>
+
+        <div class="otp-container">
+          <div class="otp-label">Your Verification Code</div>
+          <div class="otp"><%= verificationCode %></div>
+        </div>
+
+        <div class="info-box">
+          <p>
+            ⏱️ Please enter this code on the verification page in the app. This code will expire in
+            <strong>10 minutes</strong> for your security.
+          </p>
+        </div>
+
+        <div class="info-box warning">
+          <p>
+            🛡️ For security reasons, never share this OTP with anyone. Studio Era will never ask for
+            your verification code via phone, email, or any other medium.
+          </p>
+        </div>
+
+        <div class="signature">
+          <p>Best Regards,</p>
+          <p class="team-name">Studio Era Team</p>
+        </div>
+
+        <div class="footer">
+          <p>This is an automated email. Please do not reply to this message.</p>
+          <p>&copy; <%= new Date().getFullYear() %> Studio Era. All rights reserved.</p>
+          <p style="margin-top: 8px">
+            Need help? Visit our <a href="<%= process.env.APP_URL %>/support">Support Center</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
