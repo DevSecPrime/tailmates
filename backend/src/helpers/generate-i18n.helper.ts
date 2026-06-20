@@ -3,7 +3,8 @@ const { mkdirSync, readFileSync, writeFileSync } = require('fs');
 const { sync } = require('glob');
 const { basename, dirname, extname, join } = require('path');
 
-const translationsPath = join(__dirname, '../i18n/**/*.json');
+const translationsDir = join(__dirname, '../i18n');
+const translationsPath = `${translationsDir.replaceAll('\\', '/')}/**/*.json`;
 const outputPath = join(__dirname, '../generated/i18n.generated.ts');
 
 function generate() {
