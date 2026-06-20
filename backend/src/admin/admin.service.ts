@@ -6,15 +6,17 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
+
 import { comparePassword, encodePassword } from 'src/helpers/bcrypt.helper';
 import { AdminLoginDto } from './dto/admin-login.dto';
 import { I18nService } from 'nestjs-i18n';
 import { UserRoles } from 'src/constants/user.constant';
-import { AccessTokenService } from '../access-token/access-token.service';
-import { RefreshTokenService } from '../refresh-token/refresh-token.service';
+
 import { ChangePasswordDto } from './dto/change-password.dto';
 import moment from 'moment';
+import { AccessTokenService } from 'src/api/access-token/access-token.service';
+import { RefreshTokenService } from 'src/api/refresh-token/refresh-token.service';
+import { User } from 'src/api/user/entities/user.entity';
 
 @Injectable()
 export class AdminService {

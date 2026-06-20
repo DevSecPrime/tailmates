@@ -8,10 +8,19 @@ import { AccessTokenModule } from './access-token/access-token.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { AuthModule } from './auth/auth.module';
 import { DeviceTokenModule } from './device-token/device-token.module';
-import { AdminModule } from './admin/admin.module';
+
+import { AnimalBehaviourCategoryModule } from './animal-behaviour-category/animal-behaviour-category.module';
 
 @Module({
-  imports: [AppVersionModule, UserModule, AccessTokenModule, RefreshTokenModule, AuthModule, DeviceTokenModule, AdminModule],
+  imports: [
+    AppVersionModule,
+    UserModule,
+    AccessTokenModule,
+    RefreshTokenModule,
+    AuthModule,
+    DeviceTokenModule,
+    AnimalBehaviourCategoryModule,
+  ],
   controllers: [ApiController],
   providers: [ApiService],
 })

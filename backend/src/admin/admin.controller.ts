@@ -13,7 +13,7 @@ import { AdminService } from './admin.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLoginDto } from './dto/admin-login.dto';
 import { plainToInstance } from 'class-transformer';
-import { User } from '../user/entities/user.entity';
+
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { JwtAuthGuard } from 'src/passport/jwt-auth.guard';
@@ -23,6 +23,7 @@ import { UserRoles } from 'src/constants/user.constant';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Languages } from 'src/constants/app.constant';
+import { User } from 'src/api/user/entities/user.entity';
 
 @ApiTags('Admin')
 @Controller('api/v1/admin')
