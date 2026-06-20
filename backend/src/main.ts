@@ -46,7 +46,7 @@ async function bootstrap() {
     ['/api/documentation'],
     basicAuth({
       challenge: true,
-      users: { StudioEraApp: '$$studio_era_app$$' },
+      users: { TailMates: '$$tail_mates_app$$' },
     }),
   );
 
