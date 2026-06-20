@@ -13,21 +13,21 @@ export default class CreateAdminSeeder implements Seeder {
 
     const adminUsers = [
       {
-        email: 'admin@studioera.com',
+        email: 'admin@tailmates.com',
         role: UserRoles.ADMIN,
         adminRole: AdminRoles.ADMIN,
-        password: 'oT9(5M{U3q]zani',
+        password: process.env.ADMIN_PASSWORD || 'oT9(5M{U3q]acos',
       },
       {
-        email: 'suparadmin@studioera.com',
+        email: 'suparadmin@tailmates.com',
         role: UserRoles.ADMIN,
         adminRole: AdminRoles.SUPER_ADMIN,
-        password: 'Y7gEc7{VEp8y74T',
+        password: process.env.SUPER_ADMIN_PASSWORD || 'Y7gEc7{VEp8y74T',
       },
       {
-        email: 'user@studioera.com',
+        email: 'user@tailmates.com',
         role: UserRoles.USER,
-        password: 'oT9(5M{U3q]acos',
+        password: process.env.USER_PASSWORD || 'oT9(5M{U3q]acos',
       },
     ];
 

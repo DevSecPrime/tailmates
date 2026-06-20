@@ -1,10 +1,12 @@
 export enum UserRoles {
   USER = 'user',
   ADMIN = 'admin',
+  DOCTOR = 'doctor',
+  BREEDER = 'breeder',
 }
 
 export enum AdminRoles {
-  SUPER_ADMIN = 'super_admin',
+  SUPER_ADMIN = 'superAdmin',
   ADMIN = 'admin',
 }
 
