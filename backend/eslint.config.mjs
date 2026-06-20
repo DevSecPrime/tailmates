@@ -83,7 +83,7 @@ const eslintConfig = [
       ],
       semi: ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
-      'quotes': ['error', 'single', 'double'],
+      quotes: ['error', 'single'],
       'no-tabs': 'error',
       'linebreak-style': ['off'],
       'max-len': [
