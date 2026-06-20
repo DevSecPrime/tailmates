@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Exit on any error
+set -e
+
+echo "🔍 Starting pre-commit checks..."
+
+# Run ESLint for NestJS (using the lint script from package.json)
+echo "🔍 Running ESLint..."
+npm run lint
+ESLINT_EXIT_CODE=$?
+
+# Get staged files for Prettier only (portable: no -z, use wc -l so empty list doesn't fail)
+echo "📋 Getting staged files for formatting..."
+PRETTIER_FILES=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null | \
+  grep -E "\.(js|jsx|ts|tsx|json|md)$" | \
+  grep -v "node_modules/" | \
+  grep -v "\.git/" | \
+  grep -v "\.husky/" | \
+  grep -v "dist/" || true)
+
+# Run Prettier check on staged files
+if [ -n "$PRETTIER_FILES" ]; then
+  echo "💅 Running Prettier check on staged files..."
+  echo "$PRETTIER_FILES" | xargs npx prettier --check
+  PRETTIER_EXIT_CODE=$?
+else
+  echo "ℹ️  No files to format check"
+  PRETTIER_EXIT_CODE=0
+fi
+
+
+# Check if either command failed
+if [ $ESLINT_EXIT_CODE -ne 0 ] || [ $PRETTIER_EXIT_CODE -ne 0 ]; then
+  echo "❌ Lint or format errors found. Please fix them before committing."
+  exit 1
+fi
+
+echo "✅ Pre-commit checks passed successfully!"
+exit 0
