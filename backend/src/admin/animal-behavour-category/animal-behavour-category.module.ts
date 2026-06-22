@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AnimalBehavourCategoryService } from './animal-behavour-category.service';
-import { AnimalBehavourCategoryController } from './animal-behavour-category.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
+import { AnimalBehaviourCategoryController } from './animal-behavour-category.controller';
+import { AnimalBehaviourCategoryService } from './animal-behavour-category.service';
 
 @Module({
-  controllers: [AnimalBehavourCategoryController],
-  providers: [AnimalBehavourCategoryService],
+  imports: [TypeOrmModule.forFeature([AnimalBehaviourCategory])],
+  controllers: [AnimalBehaviourCategoryController],
+  providers: [AnimalBehaviourCategoryService],
+  exports: [AnimalBehaviourCategoryService],
 })
-export class AnimalBehavourCategoryModule {}
+export class AnimalBehaviourCategoryModule {}

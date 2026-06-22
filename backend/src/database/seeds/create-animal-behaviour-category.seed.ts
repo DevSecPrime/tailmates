@@ -105,7 +105,8 @@ export default class CreateAnimalBehaviourCategorySeeder implements Seeder {
         const isModified =
           existingCategory.title !== data.title ||
           existingCategory.description !== data.description ||
-          existingCategory.isActive !== data.isActive;
+          existingCategory.isActive !== data.isActive ||
+          existingCategory.slug !== data.slug;
 
         if (isModified) {
           // Merge updates into entity instance for bulk save
