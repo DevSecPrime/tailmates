@@ -1,5 +1,7 @@
 {
   "NOT_FOUND": "{property} not found.",
+  "ALREADY_EXISTS": "{property} already exists.",
+  "INVALID_CREDENTIALS": "Invalid credentials provided.",
 
   "APP_DATA_NOT_STORED": "The app version data could not be stored. Please try again.",
 
