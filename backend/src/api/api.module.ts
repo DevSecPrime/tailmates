@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { DeviceTokenModule } from './device-token/device-token.module';
 
 import { AnimalBehaviourCategoryModule } from './animal-behaviour-category/animal-behaviour-category.module';
+import { AnimalBehaviourSubCategoryModule } from './animal-behaviour-sub-category/animal-behaviour-sub-category.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AnimalBehaviourCategoryModule } from './animal-behaviour-category/anima
     AuthModule,
     DeviceTokenModule,
     AnimalBehaviourCategoryModule,
+    AnimalBehaviourSubCategoryModule,
   ],
   controllers: [ApiController],
   providers: [ApiService],

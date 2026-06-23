@@ -7,6 +7,7 @@ import { AccessTokenModule } from 'src/api/access-token/access-token.module';
 import { RefreshTokenModule } from 'src/api/refresh-token/refresh-token.module';
 import { User } from 'src/api/user/entities/user.entity';
 import { AnimalBehaviourCategoryModule } from './animal-behavour-category/animal-behavour-category.module';
+import { AnimalBehaviourSubCategoryModule } from './animal-behaviour-sub-category/animal-behaviour-sub-category.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AnimalBehaviourCategoryModule } from './animal-behavour-category/animal
     AccessTokenModule,
     RefreshTokenModule,
     AnimalBehaviourCategoryModule,
+    AnimalBehaviourSubCategoryModule,
   ],
   controllers: [AdminController],
   providers: [AdminService],
