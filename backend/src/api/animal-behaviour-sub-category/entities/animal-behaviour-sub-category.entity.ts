@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
 import {
   Column,
@@ -33,7 +34,7 @@ export class AnimalBehaviourSubCategory {
   })
   isActive: boolean;
 
-  @ManyToOne(() => AnimalBehaviourCategory, category => category.id, {
+  @ManyToOne(() => AnimalBehaviourCategory, category => category.behaviourSubCategories, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })

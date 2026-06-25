@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
@@ -51,6 +52,9 @@ export class AnimalBehaviourCategory {
   deletedAt: Date;
 
   @Expose()
-  @Type(() => AnimalBehaviourSubCategory)
-  behaviourSubCategories: Relation<AnimalBehaviourSubCategory[]>;
+  @OneToMany(
+    () => AnimalBehaviourSubCategory,
+    behaviourSubCategories => behaviourSubCategories.category,
+  )
+  behaviourSubCategories: Relation<AnimalBehaviourSubCategory>;
 }
