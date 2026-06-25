@@ -1,4 +1,5 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
+import { AnimalBehaviourSubCategory } from 'src/api/animal-behaviour-sub-category/entities/animal-behaviour-sub-category.entity';
 import { dateToTimestamp } from 'src/helpers/date-formatter.helper';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -47,4 +49,8 @@ export class AnimalBehaviourCategory {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Expose()
+  @Type(() => AnimalBehaviourSubCategory)
+  behaviourSubCategories: Relation<AnimalBehaviourSubCategory[]>;
 }

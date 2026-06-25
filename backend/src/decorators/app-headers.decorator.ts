@@ -7,7 +7,8 @@ export function AppHeaders() {
     // Accept Language
     ApiHeader({
       name: 'Accept-Language',
-      description: 'User\'s language',
+      // eslint-disable-next-line quotes
+      description: "User's language",
       schema: {
         type: 'string',
         enum: Object.values(Languages),

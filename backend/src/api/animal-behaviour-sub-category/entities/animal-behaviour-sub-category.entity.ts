@@ -36,7 +36,6 @@ export class AnimalBehaviourSubCategory {
   @ManyToOne(() => AnimalBehaviourCategory, category => category.id, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
-    eager: true,
   })
   category: AnimalBehaviourCategory;
 
