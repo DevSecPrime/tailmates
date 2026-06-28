@@ -7,6 +7,7 @@ import { CreateAnimalBehaviourSubCategoryDto } from './dto/create-animal-behavio
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { I18nContext } from 'nestjs-i18n';
 import { AnimalBehaviourCategoryService } from '../animal-behavour-category/animal-behavour-category.service';
+import { createSlug } from 'src/helpers/utils.helper';
 
 @Injectable()
 export class AnimalBehaviourSubCategoryService {
@@ -71,15 +72,16 @@ export class AnimalBehaviourSubCategoryService {
     // 5. Bulk insert the new sub-categories (No loops executing queries!)
     const subCategoriesToCreate = await Promise.all(
       uniqueIncomingTitles.map(async title => ({
-        behaviourCategory: { id: behaviourCategory.id },
+        category: { id: behaviourCategory.id },
         title,
+        slug: title ? createSlug(title) : null,
       })),
     );
 
     await this.animalBehaviourSubCategoryRepository.save(subCategoriesToCreate);
 
     return await this.animalBehaviourCategoryService.getAnimalBehaviourCategoryById(
-      behaviourCategory.abcId,
+      behaviourCategoryId,
     );
   }
 }

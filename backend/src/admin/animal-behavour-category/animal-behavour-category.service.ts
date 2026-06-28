@@ -26,6 +26,7 @@ export class AnimalBehaviourCategoryService {
   async getAnimalBehaviourCategoryById(abcId: string): Promise<AnimalBehaviourCategory> {
     const checkAnimalBehaviourCategory = await this.animalBehaviourCategoryRepository
       .createQueryBuilder('abc')
+      .leftJoinAndSelect('abc.behaviourSubCategories', 'behaviourSubCategories')
       .where('abc.abcId = :abcId', { abcId })
       .getOne();
 

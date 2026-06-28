@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  HttpCode,
   HttpStatus,
   Param,
   Post,
+  Put,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -18,6 +20,7 @@ import { I18n, I18nContext } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { plainToInstance } from 'class-transformer';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
+import { UpdateAnimalBehaviourSubCategoryDto } from './dto/update-animal-behaviour-sub-category.dto';
 
 @ApiTags('Admin - Animal Behaviour Sub Category')
 @Controller('admin/animal-behaviour-sub-category')
@@ -50,6 +53,7 @@ export class AnimalBehaviourSubCategoryController {
       createAnimalBehaviourSubCategoryDto,
       i18n,
     );
+
     return {
       statusCode: HttpStatus.CREATED,
       message: i18n.t('translate.CREATED', { args: { property: 'Animal Behaviour Sub Category' } }),
@@ -57,6 +61,38 @@ export class AnimalBehaviourSubCategoryController {
         excludeExtraneousValues: true,
         enableImplicitConversion: true,
       }), // Transform the result to an instance of AnimalBehaviourCategory
+    };
+  }
+
+  /**
+   * Update animal behaviour sub-category
+   * @param behaviourCategoryId
+   * @param updateAnimalBehaviourSubCategoryDto
+   * @param i18n
+   * @returns
+   */
+  @Put(':behaviourCategoryId')
+  @ApiOperation({ summary: 'Update the subcategory' })
+  @ApiBody({ type: UpdateAnimalBehaviourSubCategoryDto })
+  @HttpCode(HttpStatus.OK)
+  async updateSubCategory(
+    @Param('behaviourCategoryId') behaviourCategoryId: string,
+    @Body() updateAnimalBehaviourSubCategoryDto: UpdateAnimalBehaviourSubCategoryDto,
+    @I18n() i18n: I18nContext<I18nTranslations>,
+  ) {
+    const updatedBehaviourCategory = await this.animalBehaviourSubCategoryService.updateSubCategory(
+      behaviourCategoryId,
+      updateAnimalBehaviourSubCategoryDto,
+      i18n,
+    );
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: i18n.t('translate.UPDATED', { args: { property: 'Animal Behaviour Sub Category' } }),
+      data: plainToInstance(AnimalBehaviourCategory, updatedBehaviourCategory, {
+        excludeExtraneousValues: true,
+        enableImplicitConversion: true,
+      }),
     };
   }
 }

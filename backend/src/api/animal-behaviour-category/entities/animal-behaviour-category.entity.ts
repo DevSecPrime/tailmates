@@ -56,5 +56,6 @@ export class AnimalBehaviourCategory {
     () => AnimalBehaviourSubCategory,
     behaviourSubCategories => behaviourSubCategories.category,
   )
+  @Type(() => AnimalBehaviourSubCategory)
   behaviourSubCategories: Relation<AnimalBehaviourSubCategory>;
 }

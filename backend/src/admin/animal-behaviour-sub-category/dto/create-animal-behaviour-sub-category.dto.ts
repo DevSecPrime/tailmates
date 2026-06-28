@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateAnimalBehaviourSubCategoryTitleDto {
   @ApiProperty({
@@ -15,13 +15,6 @@ export class CreateAnimalBehaviourSubCategoryTitleDto {
 }
 
 export class CreateAnimalBehaviourSubCategoryDto {
-  @ApiProperty({
-    description: 'The UUID of the parent behaviour category',
-    example: '0810cbc0-2f01-4228-9d8f-e7d09c40c984',
-  })
-  @IsUUID() // No need for @IsString() as @IsUUID() already validates it's a string format
-  behaviourCategoryId: string;
-
   @ApiProperty({
     description: 'An array of animal behaviour sub-category titles',
     example: ['Sub Category Title', 'Another Sub Category Title', 'Curious Nature'],
