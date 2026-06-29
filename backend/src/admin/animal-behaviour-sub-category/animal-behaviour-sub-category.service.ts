@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
 import { AnimalBehaviourSubCategory } from 'src/api/animal-behaviour-sub-category/entities/animal-behaviour-sub-category.entity';
@@ -96,7 +101,7 @@ export class AnimalBehaviourSubCategoryService {
     behaviourCategoryId: string,
     updateAnimalBehaviourSubCategoryDto: UpdateAnimalBehaviourSubCategoryDto,
   ): Promise<AnimalBehaviourCategory> {
-    await this.dataSource.transaction(async (manager) => {
+    await this.dataSource.transaction(async manager => {
       // 1. Validate parent category
       const behaviourCategory = await manager.findOne(AnimalBehaviourCategory, {
         where: { abcId: behaviourCategoryId },
@@ -110,16 +115,17 @@ export class AnimalBehaviourSubCategoryService {
 
       // 2. Fetch all requested subcategories globally to validate existence, soft-delete status, and category assignment
       const updateIds = subCategoriesDto
-        .map((item) => item.subCategoryId)
+        .map(item => item.subCategoryId)
         .filter((id): id is string => !!id);
       const allRequestedIds = [...new Set([...updateIds, ...deleteIds])];
 
-      const foundSubCategories = allRequestedIds.length > 0
-        ? await manager.find(AnimalBehaviourSubCategory, {
-            where: { absId: In(allRequestedIds) },
-            relations: { category: true },
-          })
-        : [];
+      const foundSubCategories =
+        allRequestedIds.length > 0
+          ? await manager.find(AnimalBehaviourSubCategory, {
+              where: { absId: In(allRequestedIds) },
+              relations: { category: true },
+            })
+          : [];
 
       const subCategoryMap = new Map<string, AnimalBehaviourSubCategory>();
       for (const subCat of foundSubCategories) {
@@ -154,7 +160,8 @@ export class AnimalBehaviourSubCategoryService {
               'Subcategory does not belong to the specified behaviour category.',
             );
           }
-          const newTitle = item.title !== undefined ? item.title.trim() : (subCat.title || '').trim();
+          const newTitle =
+            item.title !== undefined ? item.title.trim() : (subCat.title || '').trim();
           updates.push({ subCat, newTitle });
         } else {
           if (item.title === undefined || item.title.trim() === '') {
@@ -167,7 +174,7 @@ export class AnimalBehaviourSubCategoryService {
       // Add remaining active subcategories to finalActiveTitles
       for (const subCat of dbActiveSubCategories) {
         const isDeleted = deleteIds.includes(subCat.absId);
-        const isUpdated = subCategoriesDto.some((item) => item.subCategoryId === subCat.absId);
+        const isUpdated = subCategoriesDto.some(item => item.subCategoryId === subCat.absId);
         if (!isDeleted && !isUpdated) {
           finalActiveTitles.add((subCat.title || '').trim().toLowerCase());
         }
@@ -194,7 +201,7 @@ export class AnimalBehaviourSubCategoryService {
       // 4. Perform database operations
       // Perform soft deletes
       if (deleteIds.length > 0) {
-        const dbIdsToDelete = deleteIds.map((id) => subCategoryMap.get(id)!.id);
+        const dbIdsToDelete = deleteIds.map(id => subCategoryMap.get(id)!.id);
         await manager.softDelete(AnimalBehaviourSubCategory, dbIdsToDelete);
       }
 

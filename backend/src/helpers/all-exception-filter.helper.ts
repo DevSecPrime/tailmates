@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpException, HttpStatus } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Request, Response } from 'express';
 import moment from 'moment';
@@ -17,14 +12,11 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string | string[] =
-      'Oops! Something went wrong. Please try again later.';
+    let message: string | string[] = 'Oops! Something went wrong. Please try again later.';
     let error = 'Internal Server Error';
 
     if (exception instanceof I18nValidationException) {
-      const messages = exception.errors.flatMap((err) =>
-        Object.values(err.constraints || {}),
-      );
+      const messages = exception.errors.flatMap(err => Object.values(err.constraints || {}));
       message = messages.join(', ');
       error = 'Validation Error';
       status = HttpStatus.BAD_REQUEST;

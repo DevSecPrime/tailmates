@@ -8,4 +8,3 @@ export const dateToTimestamp = (date: Date | number) => {
   if (!date) return null;
   return moment.utc(date).valueOf();
 };
-
