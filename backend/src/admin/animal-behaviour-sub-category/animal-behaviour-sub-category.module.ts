@@ -4,7 +4,7 @@ import { AnimalBehaviourSubCategoryController } from './animal-behaviour-sub-cat
 import { AnimalBehaviourSubCategory } from 'src/api/animal-behaviour-sub-category/entities/animal-behaviour-sub-category.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
-import { AnimalBehaviourCategoryModule } from '../animal-behavour-category/animal-behavour-category.module';
+import { AnimalBehaviourCategoryModule } from '../animal-behaviour-category/animal-behaviour-category.module';
 
 @Module({
   // Import the entity for TypeORM

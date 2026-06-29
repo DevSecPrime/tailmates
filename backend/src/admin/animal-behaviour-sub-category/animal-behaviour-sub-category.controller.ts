@@ -83,7 +83,6 @@ export class AnimalBehaviourSubCategoryController {
     const updatedBehaviourCategory = await this.animalBehaviourSubCategoryService.updateSubCategory(
       behaviourCategoryId,
       updateAnimalBehaviourSubCategoryDto,
-      i18n,
     );
 
     return {

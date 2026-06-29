@@ -1,12 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
 import { AnimalBehaviourSubCategory } from 'src/api/animal-behaviour-sub-category/entities/animal-behaviour-sub-category.entity';
-import { In, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { CreateAnimalBehaviourSubCategoryDto } from './dto/create-animal-behaviour-sub-category.dto';
+import { UpdateAnimalBehaviourSubCategoryDto } from './dto/update-animal-behaviour-sub-category.dto';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { I18nContext } from 'nestjs-i18n';
-import { AnimalBehaviourCategoryService } from '../animal-behavour-category/animal-behavour-category.service';
+import { AnimalBehaviourCategoryService } from '../animal-behaviour-category/animal-behaviour-category.service';
 import { createSlug } from 'src/helpers/utils.helper';
 
 @Injectable()
@@ -19,6 +20,8 @@ export class AnimalBehaviourSubCategoryService {
 
     @InjectRepository(AnimalBehaviourCategory)
     private readonly animalBehaviourCategoryRepository: Repository<AnimalBehaviourCategory>,
+
+    private readonly dataSource: DataSource,
   ) {}
 
   /**
@@ -80,6 +83,140 @@ export class AnimalBehaviourSubCategoryService {
 
     await this.animalBehaviourSubCategoryRepository.save(subCategoriesToCreate);
 
+    return await this.animalBehaviourCategoryService.getAnimalBehaviourCategoryById(
+      behaviourCategoryId,
+    );
+  }
+
+  /**
+   * Updates animal behaviour subcategories under a specific category.
+   * Runs inside a database transaction to ensure atomicity.
+   */
+  async updateSubCategory(
+    behaviourCategoryId: string,
+    updateAnimalBehaviourSubCategoryDto: UpdateAnimalBehaviourSubCategoryDto,
+  ): Promise<AnimalBehaviourCategory> {
+    await this.dataSource.transaction(async (manager) => {
+      // 1. Validate parent category
+      const behaviourCategory = await manager.findOne(AnimalBehaviourCategory, {
+        where: { abcId: behaviourCategoryId },
+      });
+      if (!behaviourCategory) {
+        throw new NotFoundException('Animal behaviour category not found.');
+      }
+
+      const deleteIds = updateAnimalBehaviourSubCategoryDto.deleteSubcategoryIds || [];
+      const subCategoriesDto = updateAnimalBehaviourSubCategoryDto.subCategories || [];
+
+      // 2. Fetch all requested subcategories globally to validate existence, soft-delete status, and category assignment
+      const updateIds = subCategoriesDto
+        .map((item) => item.subCategoryId)
+        .filter((id): id is string => !!id);
+      const allRequestedIds = [...new Set([...updateIds, ...deleteIds])];
+
+      const foundSubCategories = allRequestedIds.length > 0
+        ? await manager.find(AnimalBehaviourSubCategory, {
+            where: { absId: In(allRequestedIds) },
+            relations: { category: true },
+          })
+        : [];
+
+      const subCategoryMap = new Map<string, AnimalBehaviourSubCategory>();
+      for (const subCat of foundSubCategories) {
+        subCategoryMap.set(subCat.absId, subCat);
+      }
+
+      for (const id of allRequestedIds) {
+        const subCat = subCategoryMap.get(id);
+        if (!subCat || subCat.category?.abcId !== behaviourCategoryId) {
+          throw new NotFoundException(
+            'Subcategory does not belong to the specified behaviour category.',
+          );
+        }
+      }
+
+      // 3. Duplicate checks: Find all currently active subcategories under this category
+      const dbActiveSubCategories = await manager.find(AnimalBehaviourSubCategory, {
+        where: { category: { id: behaviourCategory.id } },
+      });
+
+      const finalActiveTitles = new Set<string>();
+
+      // Parse updates and creates
+      const updates: Array<{ subCat: AnimalBehaviourSubCategory; newTitle: string }> = [];
+      const creates: Array<{ title: string }> = [];
+
+      for (const item of subCategoriesDto) {
+        if (item.subCategoryId) {
+          const subCat = subCategoryMap.get(item.subCategoryId);
+          if (!subCat) {
+            throw new NotFoundException(
+              'Subcategory does not belong to the specified behaviour category.',
+            );
+          }
+          const newTitle = item.title !== undefined ? item.title.trim() : (subCat.title || '').trim();
+          updates.push({ subCat, newTitle });
+        } else {
+          if (item.title === undefined || item.title.trim() === '') {
+            throw new BadRequestException('Subcategory title is required.');
+          }
+          creates.push({ title: item.title.trim() });
+        }
+      }
+
+      // Add remaining active subcategories to finalActiveTitles
+      for (const subCat of dbActiveSubCategories) {
+        const isDeleted = deleteIds.includes(subCat.absId);
+        const isUpdated = subCategoriesDto.some((item) => item.subCategoryId === subCat.absId);
+        if (!isDeleted && !isUpdated) {
+          finalActiveTitles.add((subCat.title || '').trim().toLowerCase());
+        }
+      }
+
+      // Add and check updates
+      for (const updateItem of updates) {
+        const titleKey = updateItem.newTitle.toLowerCase();
+        if (finalActiveTitles.has(titleKey)) {
+          throw new ConflictException('Subcategory title already exists.');
+        }
+        finalActiveTitles.add(titleKey);
+      }
+
+      // Add and check creates
+      for (const createItem of creates) {
+        const titleKey = createItem.title.toLowerCase();
+        if (finalActiveTitles.has(titleKey)) {
+          throw new ConflictException('Subcategory title already exists.');
+        }
+        finalActiveTitles.add(titleKey);
+      }
+
+      // 4. Perform database operations
+      // Perform soft deletes
+      if (deleteIds.length > 0) {
+        const dbIdsToDelete = deleteIds.map((id) => subCategoryMap.get(id)!.id);
+        await manager.softDelete(AnimalBehaviourSubCategory, dbIdsToDelete);
+      }
+
+      // Perform updates
+      for (const updateItem of updates) {
+        updateItem.subCat.title = updateItem.newTitle;
+        updateItem.subCat.slug = createSlug(updateItem.newTitle);
+        await manager.save(updateItem.subCat);
+      }
+
+      // Perform creates
+      for (const createItem of creates) {
+        const newSubCat = manager.create(AnimalBehaviourSubCategory, {
+          title: createItem.title,
+          slug: createSlug(createItem.title),
+          category: behaviourCategory,
+        });
+        await manager.save(newSubCat);
+      }
+    });
+
+    // 5. Return the updated category with its active subcategories
     return await this.animalBehaviourCategoryService.getAnimalBehaviourCategoryById(
       behaviourCategoryId,
     );

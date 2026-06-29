@@ -25,7 +25,7 @@ import { plainToInstance } from 'class-transformer';
 import { JwtAuthGuard } from 'src/passport/jwt-auth.guard';
 import { RolesGuard } from 'src/passport/roles.guard';
 import { AnimalBehaviourCategory } from 'src/api/animal-behaviour-category/entities/animal-behaviour-category.entity';
-import { AnimalBehaviourCategoryService } from './animal-behavour-category.service';
+import { AnimalBehaviourCategoryService } from './animal-behaviour-category.service';
 import { UpdateAnimalBehaviourCategoryDto } from './dto/update-animal-behaviour-category.dto';
 import { DEFAULT_COUNT, DEFAULT_LIMIT } from 'src/constants/app.constant';
 
