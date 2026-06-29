@@ -39,6 +39,9 @@ async function bootstrap() {
   const port = Number(configService.get('PORT', 3080));
   const appUrl = process.env.APP_URL ?? `http://localhost:${port}`;
 
+  const swaggerUsername = configService.get<string>('SWAGGER_USERNAME')! as string;
+  const swaggerPassword = configService.get<string>('SWAGGER_PASSWORD')! as string;
+
   /**
    * Swagger Documentation
    */
@@ -46,7 +49,7 @@ async function bootstrap() {
     ['/api/documentation'],
     basicAuth({
       challenge: true,
-      users: { TailMates: '$$tail_mates_app$$' },
+      users: { [swaggerUsername]: swaggerPassword },
     }),
   );
 
